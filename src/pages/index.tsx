@@ -73,6 +73,7 @@ class Home extends React.Component<Props, State> {
     const result = this.data.filter(o => o.id.includes(this.state.searchValue));
     this.setState({
       data: result,
+      currentPage: 1,
     });
   };
 
@@ -80,6 +81,7 @@ class Home extends React.Component<Props, State> {
     this.setState({
       searchValue: '',
       data: this.data,
+      currentPage: 1,
     });
   };
 
