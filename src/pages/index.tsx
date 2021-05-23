@@ -12,6 +12,7 @@ import Column from 'src/components/Grid/Column';
 import Table, { TableProps } from 'src/components/Table/Table';
 import Button from 'src/components/Button/Button';
 import Input from 'src/components/Input/Input';
+import PreloadImage from 'src/components/PreloadImage/PreloadImage';
 
 import isString from 'lodash/isString';
 import { Theme } from 'src/styles/theme';
@@ -111,17 +112,20 @@ class Home extends React.Component<Props, State> {
             if (srcMatch && srcMatch.length > 0) {
               src = srcMatch[1];
             }
+            const id = record.id.replace(/<[^>]+>/g, '');
+
             return (
-              <img
+              <PreloadImage
+                key={id}
+                css={styles.img}
                 src={src}
                 width={48}
                 height={48}
-                alt={`SolPunk ${record.id.replace(/<[^>]+>/g, '')}`}
-                css={styles.img}
+                alt={`SolPunk ${id}`}
               />
             );
           }
-          return <span>No Image</span>;
+          return null;
         },
       },
       {
@@ -142,7 +146,7 @@ class Home extends React.Component<Props, State> {
               </a>
             );
           }
-          return <span>No Image</span>;
+          return null;
         },
       },
       {
