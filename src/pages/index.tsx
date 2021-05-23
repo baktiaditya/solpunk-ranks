@@ -228,6 +228,12 @@ class Home extends React.Component<Props, State> {
           <link rel="icon" href="/cropped-unknown_2.png" />
         </Head>
 
+        <div css={styles.ghCorner}>
+          <a href="https://github.com/baktiaditya/solpunk-ranks" target="_blank" rel="noreferrer">
+            <img src="/github-corner-right.svg" alt="Github" width={66} />
+          </a>
+        </div>
+
         <div css={styles.wrapper}>
           <Container>
             <div css={styles.heading}>
@@ -280,6 +286,11 @@ class Home extends React.Component<Props, State> {
 
 const createStyles = (t: Theme) => {
   return {
+    ghCorner: css`
+      position: absolute;
+      right: 0;
+      top: 0;
+    `,
     wrapper: css`
       padding-top: ${t.spacing.xxxxl}px;
       padding-bottom: ${t.spacing.xxxxl}px;

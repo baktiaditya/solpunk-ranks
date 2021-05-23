@@ -72,12 +72,12 @@ const createStyles = (t: Theme) => {
       align-items: center;
 
       ${t.mq({
-        flexDirection: ['column', 'column', 'row', 'row', 'row'],
+        flexDirection: ['column', 'column', 'column', 'row', 'row'],
       })}
     `,
     footerRowLeft: css`
       ${t.mq({
-        marginBottom: [t.spacing.m, t.spacing.m, 0, 0, 0],
+        marginBottom: [t.spacing.m, t.spacing.m, t.spacing.m, 0, 0],
       })}
     `,
 
