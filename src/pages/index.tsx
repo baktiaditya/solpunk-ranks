@@ -16,7 +16,7 @@ import Input from 'src/components/Input/Input';
 import isString from 'lodash/isString';
 import { Theme } from 'src/styles/theme';
 
-type Data = {
+type PunkData = {
   ranking: number;
   punk_image: string;
   id: string;
@@ -36,19 +36,17 @@ type Props = {
 
 type State = {
   currentPage: number;
-  isSearching: boolean;
   searchValue: string;
-  data: Array<Data>;
+  data: Array<PunkData>;
 };
 
 class Home extends React.Component<Props, State> {
-  data = ranks as Array<Data>;
+  data = ranks as Array<PunkData>;
   perPage = 25;
   totalPage = Math.ceil(this.data.length / this.perPage);
 
   state: State = {
     currentPage: 1,
-    isSearching: false,
     searchValue: '',
     data: this.data,
   };
@@ -65,16 +63,18 @@ class Home extends React.Component<Props, State> {
 
   handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
-      searchValue: e.target.value,
+      searchValue: e.target.value.trim(),
     });
   };
 
   handleSearch = () => {
-    const result = this.data.filter(o => o.id.includes(this.state.searchValue));
-    this.setState({
-      data: result,
-      currentPage: 1,
-    });
+    if (this.state.searchValue) {
+      const result = this.data.filter(punk => punk.id.includes(this.state.searchValue));
+      this.setState({
+        data: result,
+        currentPage: 1,
+      });
+    }
   };
 
   handleReset = () => {
@@ -92,7 +92,7 @@ class Home extends React.Component<Props, State> {
       this.state.currentPage * this.perPage,
     );
 
-    const columns: TableProps<Data>['columns'] = [
+    const columns: TableProps<PunkData>['columns'] = [
       {
         title: 'Ranking',
         dataIndex: 'ranking',
@@ -150,12 +150,24 @@ class Home extends React.Component<Props, State> {
         dataIndex: 'minscore',
         key: 'minscore',
         width: 120,
+        render: value => {
+          if (isString(value) && value === 'NULL') {
+            return '-';
+          }
+          return value;
+        },
       },
       {
         title: '2nd',
         dataIndex: '2nd',
         key: '2nd',
         width: 80,
+        render: value => {
+          if (isString(value) && value === 'NULL') {
+            return '-';
+          }
+          return value;
+        },
       },
       {
         title: 'Category Score',
@@ -176,9 +188,13 @@ class Home extends React.Component<Props, State> {
         width: 300,
         render: value => {
           if (isString(value)) {
-            return value.split(',').join(', ');
+            if (value === 'NULL') {
+              return '-';
+            } else {
+              return value.split(',').join(', ');
+            }
           }
-          return null;
+          return value;
         },
       },
       {
@@ -207,15 +223,15 @@ class Home extends React.Component<Props, State> {
     return (
       <Fragment>
         <Head>
-          <title>SolPunks Rank</title>
-          <meta name="description" content="SolPunks rank checker" />
+          <title>SolPunk Ranks</title>
+          <meta name="description" content="SolPunk ranks checker" />
           <link rel="icon" href="/cropped-unknown_2.png" />
         </Head>
 
         <div css={styles.wrapper}>
           <Container>
             <div css={styles.heading}>
-              <h2>SolPunks Rank</h2>
+              <h2>SolPunk Ranks</h2>
             </div>
 
             <Row>
@@ -242,7 +258,7 @@ class Home extends React.Component<Props, State> {
               </Column>
             </Row>
 
-            <Table<Data>
+            <Table<PunkData>
               columns={columns}
               data={paginatedData}
               scroll={{ x: scrollX }}
