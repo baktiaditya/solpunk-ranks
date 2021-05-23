@@ -38,7 +38,7 @@ const createStyles = (t: Theme) => {
 
       tbody {
         tr {
-          vertical-align: top;
+          /* vertical-align: top; */
           border-bottom: 1px solid ${rgba(t.color.lightPrimary, 0.25)};
 
           &:last-child {

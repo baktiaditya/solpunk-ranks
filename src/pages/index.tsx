@@ -103,15 +103,23 @@ class Home extends React.Component<Props, State> {
         title: 'Image',
         dataIndex: 'punk_image',
         key: 'punk_image',
-        width: 70,
-        render: value => {
+        width: 72,
+        render: (value, record) => {
           if (isString(value)) {
             const srcMatch = value.match(/src="([^"]*)/);
             let src: string | undefined;
             if (srcMatch && srcMatch.length > 0) {
               src = srcMatch[1];
             }
-            return <img src={src} />;
+            return (
+              <img
+                src={src}
+                width={48}
+                height={48}
+                alt={`SolPunk ${record.id.replace(/<[^>]+>/g, '')}`}
+                css={styles.img}
+              />
+            );
           }
           return <span>No Image</span>;
         },
@@ -215,7 +223,7 @@ class Home extends React.Component<Props, State> {
                 <form css={styles.searchBox} onSubmit={this.handleFormSubmit}>
                   <Input
                     css={styles.searchBoxInput}
-                    placeholder="Image ID"
+                    placeholder="SolPunk ID"
                     onChange={this.handleInputChange}
                     value={this.state.searchValue}
                   />
@@ -244,6 +252,8 @@ class Home extends React.Component<Props, State> {
                 perPage: this.perPage,
                 totalData: this.state.data.length,
               }}
+              footerTextSingular="Showing #text3 SolPunk"
+              footerTextPlural="Showing #text1-#text2 from #text3 SolPunks"
             />
           </Container>
         </div>
@@ -272,6 +282,17 @@ const createStyles = (t: Theme) => {
     `,
     btnSearch: css`
       margin-left: ${t.spacing.s}px;
+    `,
+    img: css`
+      image-rendering: -moz-crisp-edges;
+      image-rendering: pixelated;
+      background: rgb(47, 207, 183);
+      background: linear-gradient(
+        180deg,
+        rgba(47, 207, 183, 1) 0%,
+        rgba(111, 143, 209, 1) 50%,
+        rgba(179, 73, 238, 1) 100%
+      );
     `,
   };
 };

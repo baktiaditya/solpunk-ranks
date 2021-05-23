@@ -5,10 +5,18 @@ import Pagination, { defaultProps as PaginationDefaultProps } from '../Paginatio
 import { TableProps, DefaultRecordType, PaginationProps } from './Table.types';
 import createStyles from './Table.styles';
 
-type Props<RecordType = unknown> = Pick<TableProps<RecordType>, 'data' | 'pagination'>;
+type Props<RecordType = unknown> = Pick<
+  TableProps<RecordType>,
+  'data' | 'pagination' | 'footerTextPlural' | 'footerTextSingular'
+>;
 
 const TableFooter = <RecordType extends DefaultRecordType>(props: Props<RecordType>) => {
-  const { data, pagination } = props;
+  const {
+    data,
+    pagination,
+    footerTextSingular = 'Showing #text3 entry',
+    footerTextPlural = 'Showing #text1-#text2 from #text3 entries',
+  } = props;
   const {
     perPage = 10,
     totalData = 10,
@@ -35,9 +43,12 @@ const TableFooter = <RecordType extends DefaultRecordType>(props: Props<RecordTy
     <div css={styles.footer}>
       <div css={styles.footerRow}>
         <div css={styles.footerRowLeft}>
-          {currentTotalData > 0
-            ? `Showing ${text1}-${text2} from ${totalData} entries`
-            : `Showing ${totalData} entry`}
+          {currentTotalData > 1
+            ? footerTextPlural
+                .replace('#text1', String(text1))
+                .replace('#text2', String(text2))
+                .replace('#text3', String(totalData))
+            : footerTextSingular.replace('#text3', String(totalData))}
         </div>
         <div>
           <Pagination {...rest} totalPage={totalPage} currentPage={currentPage} />

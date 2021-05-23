@@ -30,8 +30,12 @@ export type State = {
 export type TableProps<RecordType = unknown> = {
   columns?: Array<Column<RecordType>>;
   data?: Array<RecordType>;
-  /** @default "Tidak ada data" */
+  /** @default "No data found" */
   emptyText?: React.ReactNode;
+  /** @default "Showing #text3 entry" */
+  footerTextSingular?: string;
+  /** @default "Showing #text1-#text2 from #text3 entries" */
+  footerTextPlural?: string;
   layout?: 'fixed' | 'auto';
   pagination?: PaginationProps;
   scroll?: { x?: number };

@@ -15,8 +15,10 @@ const Table = <RecordType extends DefaultRecordType>(props: TableProps<RecordTyp
   const {
     columns,
     data,
-    emptyText = 'Image not found',
+    emptyText = 'No data found',
     layout = 'auto',
+    footerTextPlural,
+    footerTextSingular,
     pagination,
     scroll,
   } = props;
@@ -46,7 +48,12 @@ const Table = <RecordType extends DefaultRecordType>(props: TableProps<RecordTyp
           </table>
         </div>
         {/* Footer */}
-        <TableFooter<RecordType> data={data} pagination={pagination} />
+        <TableFooter<RecordType>
+          data={data}
+          pagination={pagination}
+          footerTextPlural={footerTextPlural}
+          footerTextSingular={footerTextSingular}
+        />
       </div>
     </div>
   );
