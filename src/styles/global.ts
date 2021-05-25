@@ -30,7 +30,7 @@ const globalStyles = (t: Theme) => {
       font-size: ${t.typography.size.medium}px;
       line-height: ${t.typography.lineHeight};
       color: ${t.color.lightPrimary};
-      background-color: ${t.color.lightPrimary};
+      background-color: ${t.color.darkPrimary};
       background-image: linear-gradient(180deg, #0d1846 0%, #861592 100%);
       background-repeat: no-repeat;
       background-attachment: fixed;

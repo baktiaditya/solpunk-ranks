@@ -13,6 +13,7 @@ const createStyles = (t: Theme) => {
     `,
     table: css`
       width: 100%;
+      border-collapse: separate;
       border-spacing: 0;
 
       th,
@@ -29,20 +30,23 @@ const createStyles = (t: Theme) => {
           color: ${t.color.lightPrimary};
           text-align: left;
           font-weight: ${t.typography.weight.medium};
-          border-top: 4px solid ${rgba(t.color.lightPrimary, 0.25)};
-          border-bottom: 4px solid ${rgba(t.color.lightPrimary, 0.25)};
           padding-top: ${t.spacing.s}px;
           padding-bottom: ${t.spacing.s}px;
+          border-top: 4px solid ${rgba(t.color.lightPrimary, 0.25)};
+          border-bottom: 4px solid ${rgba(t.color.lightPrimary, 0.25)};
         }
       }
 
       tbody {
         tr {
-          /* vertical-align: top; */
-          border-bottom: 1px solid ${rgba(t.color.lightPrimary, 0.25)};
+          td {
+            border-bottom: 1px solid ${rgba(t.color.lightPrimary, 0.25)};
+          }
 
           &:last-child {
-            border-bottom: 0;
+            td {
+              border-bottom: 0;
+            }
           }
         }
       }
@@ -63,7 +67,6 @@ const createStyles = (t: Theme) => {
     `,
     footer: css`
       border-top: 4px solid ${rgba(t.color.lightPrimary, 0.25)};
-      border-radius: 0 0 ${t.border.radius.default}px ${t.border.radius.default}px;
       padding: ${t.spacing.s}px ${t.spacing.s}px;
     `,
     footerRow: css`

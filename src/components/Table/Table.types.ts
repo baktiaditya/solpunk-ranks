@@ -13,7 +13,7 @@ export type PaginationProps = Omit<PaginationOwnProps, 'totalPage'> & {
 };
 
 export type Column<RecordType> = {
-  dataIndex?: string;
+  dataIndex?: keyof RecordType;
   key: string;
   onSortChange?: (direction: 'asc' | 'desc' | undefined) => void;
   render?: (value: React.ReactNode, record: RecordType) => React.ReactNode;
@@ -28,7 +28,7 @@ export type State = {
 };
 
 export type TableProps<RecordType = unknown> = {
-  columns?: Array<Column<RecordType>>;
+  columns: Array<Column<RecordType>>;
   data?: Array<RecordType>;
   /** @default "No data found" */
   emptyText?: React.ReactNode;

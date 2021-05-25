@@ -39,19 +39,30 @@ const TableFooter = <RecordType extends DefaultRecordType>(props: Props<RecordTy
 
   const totalPage = Math.ceil(totalData / perPage);
 
+  const renderLeftText = () => {
+    if (currentTotalData > 0) {
+      if (currentTotalData > 1) {
+        return footerTextPlural
+          .replace('#text1', String(text1))
+          .replace('#text2', String(text2))
+          .replace('#text3', String(totalData));
+      }
+      return footerTextSingular.replace('#text3', String(totalData));
+    }
+    return null;
+  };
+
   return (
     <div css={styles.footer}>
       <div css={styles.footerRow}>
-        <div css={styles.footerRowLeft}>
-          {currentTotalData > 1
-            ? footerTextPlural
-                .replace('#text1', String(text1))
-                .replace('#text2', String(text2))
-                .replace('#text3', String(totalData))
-            : footerTextSingular.replace('#text3', String(totalData))}
-        </div>
+        <div css={styles.footerRowLeft}>{renderLeftText()}</div>
         <div>
-          <Pagination {...rest} totalPage={totalPage} currentPage={currentPage} />
+          <Pagination
+            {...rest}
+            totalPage={totalPage}
+            currentPage={currentPage}
+            marginPagesDisplayed={1}
+          />
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import { jsx, useTheme } from '@emotion/react';
+import { jsx, css, useTheme } from '@emotion/react';
 import get from 'lodash/get';
 import { TableProps, DefaultRecordType } from './Table.types';
 import createStyles from './Table.styles';
@@ -59,7 +59,12 @@ const TableBody = <RecordType extends DefaultRecordType>(props: Props<RecordType
         })
       ) : (
         <tr>
-          <td colSpan={columns && (columns.length || undefined)} style={{ textAlign: 'center' }}>
+          <td
+            colSpan={columns && (columns.length || undefined)}
+            css={css`
+              text-align: left;
+            `}
+          >
             {emptyText}
           </td>
         </tr>

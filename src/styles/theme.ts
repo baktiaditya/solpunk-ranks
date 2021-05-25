@@ -84,9 +84,9 @@ const typography = {
     bold: 700,
   },
   size: {
-    gigantic: 32,
-    huge: 39,
-    big: 20,
+    gigantic: 42,
+    huge: 38,
+    big: 32,
     large: 16,
     medium: 14,
     small: 12.8,

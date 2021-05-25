@@ -3,7 +3,6 @@
 /* eslint-disable react/display-name */
 import React, { Fragment } from 'react';
 import { jsx, css, withTheme } from '@emotion/react';
-import Head from 'next/head';
 import ranks from 'src/data/ranks.json';
 
 import Container from 'src/components/Grid/Container';
@@ -13,6 +12,7 @@ import Table, { TableProps } from 'src/components/Table/Table';
 import Button from 'src/components/Button/Button';
 import Input from 'src/components/Input/Input';
 import PreloadImage from 'src/components/PreloadImage/PreloadImage';
+import GithubCornerRight from 'src/components/GithubCornerRight/GithubCornerRight';
 
 import isString from 'lodash/isString';
 import { Theme } from 'src/styles/theme';
@@ -37,20 +37,32 @@ type Props = {
 
 type State = {
   currentPage: number;
+  inputValue: string;
   searchValue: string;
   data: Array<PunkData>;
 };
 
 class Home extends React.Component<Props, State> {
-  data = ranks as Array<PunkData>;
-  perPage = 25;
-  totalPage = Math.ceil(this.data.length / this.perPage);
+  data: Array<PunkData>;
+  perPage: number;
+  totalPage: number;
+  styles: ReturnType<typeof createStyles>;
 
-  state: State = {
-    currentPage: 1,
-    searchValue: '',
-    data: this.data,
-  };
+  constructor(props: Props) {
+    super(props);
+
+    this.data = ranks as Array<PunkData>;
+    this.perPage = 25;
+    this.totalPage = Math.ceil(this.data.length / this.perPage);
+    this.styles = createStyles(props.theme);
+
+    this.state = {
+      currentPage: 1,
+      inputValue: '',
+      searchValue: '',
+      data: this.data,
+    };
+  }
 
   handlePageChange = (pageNum: number) => {
     this.setState({
@@ -64,35 +76,38 @@ class Home extends React.Component<Props, State> {
 
   handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
-      searchValue: e.target.value.trim(),
+      inputValue: e.target.value.trim(),
     });
   };
 
+  handleInputWheel = (e: React.WheelEvent<HTMLInputElement>) => {
+    const target = e.target as HTMLInputElement;
+    if (target && 'blur' in target) {
+      target.blur();
+    }
+  };
+
   handleSearch = () => {
-    if (this.state.searchValue) {
-      const result = this.data.filter(punk => punk.id.includes(this.state.searchValue));
+    if (this.state.inputValue) {
+      const result = this.data.filter(punk => punk.id.includes(this.state.inputValue));
       this.setState({
         data: result,
         currentPage: 1,
+        searchValue: this.state.inputValue,
       });
     }
   };
 
   handleReset = () => {
     this.setState({
+      inputValue: '',
       searchValue: '',
       data: this.data,
       currentPage: 1,
     });
   };
 
-  render() {
-    const styles = createStyles(this.props.theme);
-    const paginatedData = this.state.data.slice(
-      (this.state.currentPage - 1) * this.perPage,
-      this.state.currentPage * this.perPage,
-    );
-
+  getColumns = () => {
     const columns: TableProps<PunkData>['columns'] = [
       {
         title: 'Ranking',
@@ -105,73 +120,28 @@ class Home extends React.Component<Props, State> {
         dataIndex: 'punk_image',
         key: 'punk_image',
         width: 72,
-        render: (value, record) => {
-          if (isString(value)) {
-            const srcMatch = value.match(/src="([^"]*)/);
-            let src: string | undefined;
-            if (srcMatch && srcMatch.length > 0) {
-              src = srcMatch[1];
-            }
-            const id = record.id.replace(/<[^>]+>/g, '');
-
-            return (
-              <PreloadImage
-                key={id}
-                css={styles.img}
-                src={src}
-                width={48}
-                height={48}
-                alt={`SolPunk ${id}`}
-              />
-            );
-          }
-          return null;
-        },
+        render: this.renderPunkImageCol,
       },
       {
         title: 'ID',
         dataIndex: 'id',
         key: 'id',
         width: 80,
-        render: value => {
-          if (isString(value)) {
-            const hrefMatch = value.match(/href="([^"]*)/);
-            let href = '#';
-            if (hrefMatch && hrefMatch.length > 0) {
-              href = hrefMatch[1];
-            }
-            return (
-              <a href={href} target="_blank" rel="noreferrer">
-                {value.replace(/<[^>]+>/g, '')}
-              </a>
-            );
-          }
-          return null;
-        },
+        render: this.renderIdCol,
       },
       {
         title: 'Min. Score',
         dataIndex: 'minscore',
         key: 'minscore',
         width: 120,
-        render: value => {
-          if (isString(value) && value === 'NULL') {
-            return '-';
-          }
-          return value;
-        },
+        render: this.renderCol,
       },
       {
         title: '2nd',
         dataIndex: '2nd',
         key: '2nd',
         width: 80,
-        render: value => {
-          if (isString(value) && value === 'NULL') {
-            return '-';
-          }
-          return value;
-        },
+        render: this.renderCol,
       },
       {
         title: 'Category Score',
@@ -190,16 +160,7 @@ class Home extends React.Component<Props, State> {
         dataIndex: 'attributes',
         key: 'attributes',
         width: 300,
-        render: value => {
-          if (isString(value)) {
-            if (value === 'NULL') {
-              return '-';
-            } else {
-              return value.split(',').join(', ');
-            }
-          }
-          return value;
-        },
+        render: this.renderAttrCol,
       },
       {
         title: 'Skin',
@@ -220,44 +181,117 @@ class Home extends React.Component<Props, State> {
         width: 200,
       },
     ];
-    const scrollX = columns.reduce((a, b) => {
+
+    return columns;
+  };
+
+  getScrollX = () => {
+    return this.getColumns().reduce((a, b) => {
       return a + Number(b.width);
     }, 0);
+  };
 
+  getPaginatedData = () => {
+    return this.state.data.slice(
+      (this.state.currentPage - 1) * this.perPage,
+      this.state.currentPage * this.perPage,
+    );
+  };
+
+  renderPunkImageCol = (value: React.ReactNode, record: PunkData) => {
+    if (isString(value)) {
+      const srcMatch = value.match(/src="([^"]*)/);
+      let src: string | undefined;
+      if (srcMatch && srcMatch.length > 0) {
+        src = srcMatch[1];
+      }
+      const id = record.id.replace(/<[^>]+>/g, '');
+
+      return (
+        <PreloadImage
+          key={id}
+          css={this.styles.img}
+          src={src}
+          width={48}
+          height={48}
+          alt={`SolPunk ${id}`}
+        />
+      );
+    }
+    return null;
+  };
+
+  renderIdCol = (value: React.ReactNode) => {
+    if (isString(value)) {
+      const hrefMatch = value.match(/href="([^"]*)/);
+      let href = '#';
+      if (hrefMatch && hrefMatch.length > 0) {
+        href = hrefMatch[1];
+      }
+      return (
+        <a href={href} target="_blank" rel="noreferrer">
+          {value.replace(/<[^>]+>/g, '')}
+        </a>
+      );
+    }
+    return null;
+  };
+
+  renderAttrCol = (value: React.ReactNode) => {
+    if (isString(value)) {
+      if (value === 'NULL') {
+        return '-';
+      } else {
+        return value.split(',').join(', ');
+      }
+    }
+    return value;
+  };
+
+  renderCol = (value: React.ReactNode) => {
+    if (isString(value) && value === 'NULL') {
+      return '-';
+    }
+    return value;
+  };
+
+  render() {
     return (
       <Fragment>
-        <Head>
-          <title>SolPunk Ranks</title>
-          <meta name="description" content="SolPunk ranks checker" />
-          <link rel="icon" href="/cropped-unknown_2.png" />
-        </Head>
+        <a
+          css={this.styles.ghCorner}
+          href="https://github.com/baktiaditya/solpunk-ranks"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <GithubCornerRight css={this.styles.ghCornerSvg} />
+        </a>
 
-        <div css={styles.ghCorner}>
-          <a href="https://github.com/baktiaditya/solpunk-ranks" target="_blank" rel="noreferrer">
-            <img src="/github-corner-right.svg" alt="Github" width={66} />
-          </a>
-        </div>
-
-        <div css={styles.wrapper}>
+        <div css={this.styles.wrapper}>
           <Container>
-            <div css={styles.heading}>
-              <h2>SolPunk Ranks</h2>
+            <div css={this.styles.headingContainer}>
+              <h2 css={this.styles.heading}>SolPunk Ranks</h2>
             </div>
 
             <Row>
               <Column col={[12, 12, 12, 6]}>
-                <form css={styles.searchBox} onSubmit={this.handleFormSubmit}>
+                <form css={this.styles.searchBox} onSubmit={this.handleFormSubmit}>
                   <Input
-                    css={styles.searchBoxInput}
                     placeholder="SolPunk ID"
+                    type="number"
                     onChange={this.handleInputChange}
-                    value={this.state.searchValue}
+                    value={this.state.inputValue}
+                    css={this.styles.searchBoxInput}
+                    inputCSS={this.styles.searchBoxInputInner}
+                    min={0}
+                    step={1}
+                    onWheel={this.handleInputWheel}
                   />
-                  <Button css={styles.btnSearch} onClick={this.handleSearch} type="submit">
+                  <Button css={this.styles.btnSearch} onClick={this.handleSearch} type="submit">
                     Search
                   </Button>
                   <Button
-                    css={styles.btnSearch}
+                    css={this.styles.btnSearch}
                     variant="secondary"
                     onClick={this.handleReset}
                     disabled={this.state.searchValue === ''}
@@ -269,9 +303,9 @@ class Home extends React.Component<Props, State> {
             </Row>
 
             <Table<PunkData>
-              columns={columns}
-              data={paginatedData}
-              scroll={{ x: scrollX }}
+              columns={this.getColumns()}
+              data={this.getPaginatedData()}
+              scroll={{ x: this.getScrollX() }}
               pagination={{
                 onPageChange: this.handlePageChange,
                 currentPage: this.state.currentPage,
@@ -291,16 +325,30 @@ class Home extends React.Component<Props, State> {
 const createStyles = (t: Theme) => {
   return {
     ghCorner: css`
+      display: block;
       position: absolute;
       right: 0;
       top: 0;
+
+      ${t.mq({
+        width: [50, 54, 66],
+      })}
+    `,
+    ghCornerSvg: css`
+      width: 100%;
+      height: auto;
     `,
     wrapper: css`
       padding-top: ${t.spacing.xxxxl}px;
       padding-bottom: ${t.spacing.xxxxl}px;
     `,
-    heading: css`
+    headingContainer: css`
       margin-bottom: ${t.spacing.m}px;
+    `,
+    heading: css`
+      ${t.mq({
+        fontSize: [t.typography.size.big, t.typography.size.big, t.typography.size.huge],
+      })}
     `,
     searchBox: css`
       margin-top: ${t.spacing.m}px;
@@ -310,6 +358,16 @@ const createStyles = (t: Theme) => {
     `,
     searchBoxInput: css`
       flex: 1;
+    `,
+    searchBoxInputInner: css`
+      /* Chrome, Safari, Edge, Opera */
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+      /* Firefox */
+      -moz-appearance: textfield;
     `,
     btnSearch: css`
       margin-left: ${t.spacing.s}px;

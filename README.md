@@ -1,5 +1,5 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).  
-Data is taken from [Solpunk ranks](https://github.com/0xTycoon/punk-ranks).
+Data is taken from [0xTycoon/punk-ranks](https://github.com/0xTycoon/punk-ranks).
 
 ## Development
 
