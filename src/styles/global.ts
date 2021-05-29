@@ -1,9 +1,9 @@
 // Based on https://github.com/twbs/bootstrap/blob/v5.0.0-alpha1/scss/_reboot.scss
 import { css } from '@emotion/react';
 import { normalize, rgba } from 'polished';
-import { Theme } from './theme';
+import { ThemeLib } from './theme';
 
-const globalStyles = (t: Theme) => {
+const globalStyles = (t: ThemeLib) => {
   const headingMixin = css`
     margin-top: 0;
     margin-bottom: ${t.spacing.m}px;

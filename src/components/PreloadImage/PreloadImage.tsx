@@ -2,14 +2,14 @@
 /** @jsx jsx */
 import React from 'react';
 import { jsx, css, withTheme } from '@emotion/react';
-import { Theme } from 'src/styles/theme';
+import { ThemeLib } from 'src/styles/theme';
 import omit from 'lodash/omit';
 
 type PreloadImageProps = React.ImgHTMLAttributes<HTMLImageElement> & {
   duration?: number;
   ease?: string;
   lazy?: boolean;
-  theme: Theme;
+  theme: ThemeLib;
   useIntersectionObserver?: boolean;
 };
 

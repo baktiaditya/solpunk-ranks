@@ -9,13 +9,13 @@ import TableHeader from './TableHeader';
 import TableBody from './TableBody';
 import TableFooter from './TableFooter';
 import createStyles from './Table.styles';
-import { Theme } from 'src/styles/theme';
+import { ThemeLib } from 'src/styles/theme';
 
 export type TableProps<RecordType = unknown> = TablePropsBase<RecordType>;
 
 class Table<RecordType extends DefaultRecordType> extends React.Component<TableProps<RecordType>> {
   static contextType = ThemeContext;
-  context!: Theme;
+  context!: ThemeLib;
 
   shouldComponentUpdate(nextProps: TableProps<RecordType>) {
     return !isEqual(this.props, nextProps);

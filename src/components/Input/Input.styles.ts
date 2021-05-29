@@ -1,8 +1,8 @@
 import { css } from '@emotion/react';
 import { rgba } from 'polished';
-import { Theme } from 'src/styles/theme';
+import { ThemeLib } from 'src/styles/theme';
 
-const createStyles = (t: Theme) => {
+const createStyles = (t: ThemeLib) => {
   return {
     container: css`
       position: relative;

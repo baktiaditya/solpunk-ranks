@@ -1,8 +1,8 @@
 import { css } from '@emotion/react';
 import { rgba, lighten } from 'polished';
-import { Theme } from 'src/styles/theme';
+import { ThemeLib } from 'src/styles/theme';
 
-const createStyles = (t: Theme) => {
+const createStyles = (t: ThemeLib) => {
   return {
     wrapper: css`
       position: relative;

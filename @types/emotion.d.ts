@@ -1,6 +1,6 @@
 import '@emotion/react';
-import { Theme as CustomTheme } from '../src/styles/theme';
+import { ThemeLib } from '../src/styles/theme';
 
 declare module '@emotion/react' {
-  export interface Theme extends CustomTheme {}
+  export interface Theme extends ThemeLib {}
 }

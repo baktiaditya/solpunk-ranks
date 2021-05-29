@@ -1,4 +1,4 @@
-import facepaint from 'facepaint';
+import facepaint, { DynamicStyle } from 'facepaint';
 import { CSSObject } from '@emotion/react';
 
 // Animation
@@ -16,9 +16,7 @@ const animation = {
 } as const;
 
 // Color
-// format: Primary, Secondary, Neutral, Stain
 const color = {
-  // light and dark format color: Primary, Neutral, Stain, Secondary
   lightPrimary: '#ffffff',
   lightStain: '#fafafa',
   lightNeutral: '#cccccc',
@@ -26,7 +24,6 @@ const color = {
 
   darkPrimary: '#212529',
 
-  // the rest is: Primary, Secondary, Dark, Light
   bluePrimary: '#0194f3',
   purplePrimary: '#952FD3A6',
   redPrimary: '#ce352d',
@@ -103,12 +100,13 @@ export const breakpoints = {
   xl: 1200,
 } as const;
 
-export const mq: (style: { [key in keyof CSSObject]: Array<string | number> }) => any = facepaint([
-  `@media(min-width: ${breakpoints.sm}px)`,
-  `@media(min-width: ${breakpoints.md}px)`,
-  `@media(min-width: ${breakpoints.lg}px)`,
-  `@media(min-width: ${breakpoints.xl}px)`,
-]);
+export const mq: (style: { [key in keyof CSSObject]: Array<string | number> }) => DynamicStyle[] =
+  facepaint([
+    `@media(min-width: ${breakpoints.sm}px)`,
+    `@media(min-width: ${breakpoints.md}px)`,
+    `@media(min-width: ${breakpoints.lg}px)`,
+    `@media(min-width: ${breakpoints.xl}px)`,
+  ]);
 
 // Grid
 const grid = {
@@ -122,60 +120,18 @@ const grid = {
   },
 } as const;
 
-// Elevation
-const elevation = {
-  container: {
-    shadowColor: color.darkPrimary,
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: opacity.seeThrough,
-    shadowRadius: 2,
-  },
-  raised: {
-    shadowColor: color.darkPrimary,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: opacity.clear,
-    shadowRadius: 5,
-  },
-  float: {
-    shadowColor: color.darkPrimary,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: opacity.clear,
-    shadowRadius: 10,
-  },
-  hover: {
-    shadowColor: color.darkPrimary,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: opacity.seeThrough,
-    shadowRadius: 16,
-  },
-} as const;
-
-// Z-index
-const zIndex = {
-  header: 1010,
-  sidebar: 1010,
-  dropdownMenu: 1020,
-  tooltip: 1040,
-  popover: 1040,
-  notification: 1060,
-  modal: 1050,
-  modalBackdrop: 1040,
-} as const;
-
 const theme = {
   animation,
   border,
   breakpoints,
   color,
-  elevation,
   grid,
   mq,
   opacity,
   spacing,
   typography,
-  zIndex,
 };
 
-export type Theme = typeof theme;
+export type ThemeLib = typeof theme;
 
 export default theme;

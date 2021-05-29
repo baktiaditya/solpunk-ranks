@@ -15,7 +15,8 @@ import PreloadImage from 'src/components/PreloadImage/PreloadImage';
 import GithubCornerRight from 'src/components/GithubCornerRight/GithubCornerRight';
 
 import isString from 'lodash/isString';
-import { Theme } from 'src/styles/theme';
+import { rgba } from 'polished';
+import { ThemeLib } from 'src/styles/theme';
 
 type PunkData = {
   ranking: number;
@@ -32,7 +33,7 @@ type PunkData = {
 };
 
 type Props = {
-  theme: Theme;
+  theme: ThemeLib;
 };
 
 type State = {
@@ -267,10 +268,12 @@ class Home extends React.Component<Props, State> {
           <GithubCornerRight css={this.styles.ghCornerSvg} />
         </a>
 
-        <div css={this.styles.wrapper}>
-          <Container>
+        <main css={this.styles.main}>
+          <Container css={this.styles.container}>
             <div css={this.styles.headingContainer}>
-              <h2 css={this.styles.heading}>SolPunk Ranks</h2>
+              <h1 css={this.styles.heading}>
+                <img src="/logo.svg" alt="Solpunk Ranks" />
+              </h1>
             </div>
 
             <Row>
@@ -316,13 +319,17 @@ class Home extends React.Component<Props, State> {
               footerTextPlural="Showing #text1-#text2 from #text3 SolPunks"
             />
           </Container>
-        </div>
+
+          <footer css={this.styles.footer}>
+            SolPunks is in no way affiliated with Larva Labs and/or CryptoPunks
+          </footer>
+        </main>
       </Fragment>
     );
   }
 }
 
-const createStyles = (t: Theme) => {
+const createStyles = (t: ThemeLib) => {
   return {
     ghCorner: css`
       display: block;
@@ -338,17 +345,29 @@ const createStyles = (t: Theme) => {
       width: 100%;
       height: auto;
     `,
-    wrapper: css`
+    main: css`
+      display: flex;
+      flex-direction: column;
       padding-top: ${t.spacing.xxxxl}px;
-      padding-bottom: ${t.spacing.xxxxl}px;
+      min-height: 100vh;
+    `,
+    container: css`
+      margin-bottom: ${t.spacing.xxl}px;
     `,
     headingContainer: css`
-      margin-bottom: ${t.spacing.m}px;
+      margin-bottom: ${t.spacing.ml}px;
     `,
     heading: css`
-      ${t.mq({
-        fontSize: [t.typography.size.big, t.typography.size.big, t.typography.size.huge],
-      })}
+      font-size: 0;
+      line-height: 0;
+      margin-bottom: 0;
+
+      img {
+        ${t.mq({
+          height: [20, 24, 28],
+        })}
+        width: auto;
+      }
     `,
     searchBox: css`
       margin-top: ${t.spacing.m}px;
@@ -382,6 +401,16 @@ const createStyles = (t: Theme) => {
         rgba(111, 143, 209, 1) 50%,
         rgba(179, 73, 238, 1) 100%
       );
+    `,
+    footer: css`
+      margin-top: auto;
+      text-align: center;
+      background-color: ${rgba(t.color.lightPrimary, t.opacity.clear)};
+      padding: ${t.spacing.s}px 0;
+
+      ${t.mq({
+        fontSize: [t.typography.size.tiny, t.typography.size.tiny, t.typography.size.small],
+      })}
     `,
   };
 };

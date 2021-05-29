@@ -2,7 +2,7 @@
 /** @jsx jsx */
 import React from 'react';
 import { jsx, useTheme, withTheme } from '@emotion/react';
-import { Theme } from 'src/styles/theme';
+import { ThemeLib } from 'src/styles/theme';
 import createStyles from './Pagination.styles';
 
 export type PaginationProps = {
@@ -15,7 +15,7 @@ export type PaginationProps = {
   onPageChange?: (nextPageNum: number) => void;
   pageRangeDisplayed: number;
   previousLabel: React.ReactNode;
-  theme: Theme;
+  theme: ThemeLib;
   totalPage: number;
 };
 

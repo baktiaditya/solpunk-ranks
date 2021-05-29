@@ -1,8 +1,8 @@
 import { css } from '@emotion/react';
 import { clearFix, rgba } from 'polished';
-import { Theme } from 'src/styles/theme';
+import { ThemeLib } from 'src/styles/theme';
 
-const createStyles = (t: Theme) => {
+const createStyles = (t: ThemeLib) => {
   return {
     container: css`
       font-size: ${t.typography.size.medium}px;
