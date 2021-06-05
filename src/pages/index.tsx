@@ -73,6 +73,9 @@ class Home extends React.Component<Props, State> {
 
   handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (this.state.inputValue === '') {
+      this.handleReset();
+    }
   };
 
   handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
