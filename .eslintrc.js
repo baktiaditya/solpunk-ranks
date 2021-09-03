@@ -5,7 +5,9 @@ module.exports = {
     es6: true,
   },
   parser: '@typescript-eslint/parser', // Specifies the ESLint parser
+  plugins: ['@typescript-eslint', 'react-hooks'],
   extends: [
+    'plugin:react-hooks/recommended',
     'eslint:recommended',
     'plugin:react/recommended', // Uses the recommended rules from @eslint-plugin-react
     'plugin:@typescript-eslint/recommended', // Uses the recommended rules from @typescript-eslint/eslint-plugin
